@@ -1,0 +1,12 @@
+# GitHub workflows
+.github/workflows
+
+# Build output
+dist
+
+# Dependencies
+node_modules
+
+# Package manifests
+package-lock.json
+package.json

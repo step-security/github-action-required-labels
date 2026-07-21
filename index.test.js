@@ -131,10 +131,7 @@ describe("Required Labels", () => {
 
       mockLabels(["bug"]);
       mockListComments([{ id: "12345", body: `${matchToken}This` }]);
-      mockDelete(
-        "/repos/mheap/missing-repo/issues/comments/12345",
-        200,
-      );
+      mockDelete("/repos/mheap/missing-repo/issues/comments/12345", 200);
 
       await action();
     });
@@ -155,16 +152,12 @@ describe("Required Labels", () => {
           path: "/repos/mheap/missing-repo/issues/28/labels",
           method: "GET",
         })
-        .reply(
-          200,
-          JSON.stringify([{ name: "triage" }]),
-          {
-            headers: {
-              "content-type": "application/json",
-              link: '<https://api.github.com/repos/mheap/missing-repo/issues/28/labels?page=2>; rel="next"',
-            },
+        .reply(200, JSON.stringify([{ name: "triage" }]), {
+          headers: {
+            "content-type": "application/json",
+            link: '<https://api.github.com/repos/mheap/missing-repo/issues/28/labels?page=2>; rel="next"',
           },
-        );
+        });
 
       // Second page of labels
       pool
@@ -172,16 +165,12 @@ describe("Required Labels", () => {
           path: "/repos/mheap/missing-repo/issues/28/labels?page=2",
           method: "GET",
         })
-        .reply(
-          200,
-          JSON.stringify([{ name: "bug" }]),
-          {
-            headers: {
-              "content-type": "application/json",
-              link: '<https://api.github.com/repos/mheap/missing-repo/issues/28/labels?page=3>; rel="next"',
-            },
+        .reply(200, JSON.stringify([{ name: "bug" }]), {
+          headers: {
+            "content-type": "application/json",
+            link: '<https://api.github.com/repos/mheap/missing-repo/issues/28/labels?page=3>; rel="next"',
           },
-        );
+        });
 
       // Third page of labels
       pool
@@ -653,10 +642,7 @@ describe("Required Labels", () => {
 
       mockLabels(["enhancement", "bug"]);
       mockListComments([{ id: "12345", body: `${matchToken}This` }]);
-      mockPatch(
-        "/repos/mheap/missing-repo/issues/comments/12345",
-        200,
-      );
+      mockPatch("/repos/mheap/missing-repo/issues/comments/12345", 200);
 
       await action();
     });
