@@ -8,7 +8,7 @@
 #
 # You can specify a version:
 # FROM node:10-slim
-FROM node:slim
+FROM node:slim@sha256:715e55e4b84e4bb0ff48e49b398a848f08e55daed8eb6a0ea1839ae53bc57583
 
 # Labels for GitHub to read your action
 LABEL "com.github.actions.name"="Required Labels"
