@@ -299,6 +299,27 @@ describe("Required Labels", () => {
       expect(core.setOutput).toBeCalledWith("status", "success");
       expect(core.setOutput).toBeCalledWith("labels", "enhancement,bug");
     });
+
+    it("warns about but still evaluates unsafe regex patterns (ReDoS)", async () => {
+      restoreTest = mockPr({
+        INPUT_LABELS: "(a+)+$\nenhance.*",
+        INPUT_MODE: "minimum",
+        INPUT_COUNT: "1",
+        INPUT_USE_REGEX: "true",
+      });
+      mockLabels(["enhancement"]);
+
+      await action();
+
+      expect(core.warning).toBeCalledTimes(1);
+      expect(core.warning).toBeCalledWith(
+        expect.stringContaining(
+          "Proceeding with potentially unsafe regex pattern",
+        ),
+      );
+      expect(core.setOutput).toBeCalledWith("status", "success");
+      expect(core.setOutput).toBeCalledWith("labels", "enhancement");
+    });
   });
 
   describe("failure", () => {

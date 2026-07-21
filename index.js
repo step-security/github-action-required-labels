@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const axios = require("axios");
 const fs = require("fs");
+const safeRegex = require("safe-regex");
 
 async function validateSubscription() {
   let repoPrivate;
@@ -89,6 +90,19 @@ async function action() {
 
     // Remove any empty labels
     providedLabels = providedLabels.filter((r) => r);
+
+    // Warn about patterns that safe-regex flags as prone to catastrophic
+    // backtracking (ReDoS). We still evaluate them, but surface a warning so
+    // the author can review their regex (CWE-1333).
+    if (labelsAreRegex) {
+      for (const pattern of providedLabels) {
+        if (!safeRegex(pattern)) {
+          core.warning(
+            `Proceeding with potentially unsafe regex pattern [${pattern}]: it may cause catastrophic backtracking (ReDoS). Please review and simplify this pattern.`,
+          );
+        }
+      }
+    }
 
     let issue_number = github.context.issue.number;
 
